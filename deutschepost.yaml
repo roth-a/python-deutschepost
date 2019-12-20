@@ -1,0 +1,43 @@
+production_paketplus:
+    1C4A:
+        partner_id: "XXXX"
+        key: "XXXXXX"
+        key_phase: "1"
+    portokasse:
+        user: "xxxx@xxxx.de"
+        password: "XXXXX"
+        ekp: "00000000"
+        
+        
+test_paketplus:
+    1C4A:
+        partner_id: "XXXX"
+        partner_signature: 'xxxxxx'
+        request_timestamp: '16082018-122210'
+        key_phase: "1"
+    portokasse:
+        user: "xxxxxx@xxxx.de"
+        password: "xxxxxxxx"
+        ekp: "00000000"
+        
+        
+test_internetmarke:
+    1C4A:
+        partner_id: "XXXX"
+        key: "XXXXXX"
+        key_phase: "1"
+    portokasse:
+        user: "xxxx@xxxx.de"
+        password: "XXXXX"
+        
+        
+production_internetmarke:
+    1C4A:
+        partner_id: "XXXX"
+        key: "XXXXXX"
+        key_phase: "1"
+    portokasse:
+        user: "???"
+        password: "???"
+        
+        

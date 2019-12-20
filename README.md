@@ -1,19 +1,13 @@
 # python_deutschepost
-This is a python access to the DeutschePost PaketPlus API. Specifically the (extended) Internetmarken products.
-
-
-
-## What is this API wrapper for?
-
 This wrapper makes it possible to create shipping labels "Warenpost International" of this form:
 
 ![example.png](example.png)
 
 
 
-## DeutschePost Structure
+## DeutschePost API Structure
 
-DeutschePost has (at least) 2 apis:
+DeutschePost has (at least) 2 APIs:
 
 1. Internetmarke SOAP API. There is a very good python wrapper for it http://git.sysmocom.de/python-inema/
 2. Deutsche Post REST https://api-qa.deutschepost.com/dpi-apidoc/ . There seems to be no python wrapper for it (yet). 

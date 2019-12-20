@@ -1,5 +1,5 @@
 # https://github.com/reddit-archive/reddit/wiki/OAuth2-Python-Example
-import json, yaml, logging, requests, os, base64, datetime
+import json, logging, requests, os, base64, datetime
 import hashlib
 import pprint
 pp = pprint.PrettyPrinter()
@@ -19,7 +19,7 @@ logger.addHandler(fh)
 
 from pytz import timezone
 import xml.etree.ElementTree as ET
-import business_kernel as bk
+import python_deutschepost.interface as bk
 from pdfrw import PdfReader, PdfWriter, PageMerge
 
 
@@ -130,7 +130,7 @@ class PaketPlus:
 		
 		
 	
-	def create_order(self, product, shipment:bk.Shipment):
+	def create_order(self, product, shipment):
 		"""
 
 		Parameters
@@ -169,9 +169,7 @@ class PaketPlus:
 				10292  Warenpost International		KT	EU			  Unterschrift	350\n
 				10293  Warenpost International		KT	Non-EU		  Unterschrift	350\n
 				 				 
-		sender : Entity
-			DESCRIPTION.
-		recipient : Entity
+		shipment: interface.Shipment type
 			DESCRIPTION.
 
 		Returns
@@ -275,7 +273,7 @@ class PaketPlus:
 		output filename
 		"""
 		
-		output_file = filenames[0][:-4] + '_signed.pdf'
+		output_file = input_file[:-4] + '_signed.pdf'
 		
 		# define the reader and writer objects
 		reader_input = PdfReader(input_file)
@@ -292,50 +290,3 @@ class PaketPlus:
 		writer_output.write(output_file, reader_input)	
 		
 		return output_file
-#%%
-with open("deutschepost.yaml", "r") as file:
-	config = list(yaml.load_all(file))[0]
-
-paket_plus = PaketPlus(config, test=True)
-
-#%%
-# print(paket_plus.get_user_token())
-# print(paket_plus.wallet_balance)
-#%%
-
-sender = bk.Entity()
-recipient = bk.Entity()
-
-sender['address']['name'] = 'Marge Bouvier'
-sender['address']['house_number'] = '10'
-sender['address']['street'] = 'Düsseldorfer Straße '
-sender['address']['post_code'] = '11001'
-sender['address']['city'] = 'Berlin'
-sender['address']['country_code'] = 'DE'
-
-recipient['address']['name'] = 'Homer Simpson'
-recipient['address']['house_number'] = '4'
-recipient['address']['street'] = 'Market Square.'
-recipient['address']['post_code'] = '53911'
-recipient['address']['city'] = 'Springfield'
-recipient['address']['country_code'] = 'US'
-
-shipment = bk.Shipment()
-shipment['sender_info'] = sender
-shipment['recipient_info'] = recipient
-
-
-item_stacks = [bk.ItemStack()]
-item_stacks[0]['number'] = 2
-item_stacks[0]['item']['description_short'] = 'Flash light'
-item_stacks[0]['item']['price'] = 12.99
-
-shipment['item_stacks'] = item_stacks
-# pp.pprint(shipment)
-item_ids = paket_plus.create_order(10251, shipment)
-#%%
-filenames = [paket_plus.retrieve_label(item_id) for item_id in item_ids]
-
-signed_fileneames = [paket_plus.add_signature_to_pdf(filename) for filename in filenames]
-
-#%%

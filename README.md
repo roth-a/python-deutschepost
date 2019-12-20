@@ -21,3 +21,4 @@ Because the Internetmarke SOAP API is wrapped by a REST API, some responses are 
 
 Only a few of the api calls from https://api-qa.deutschepost.com/dpi-apidoc  are forwarded to the Internetmarke API.
 
+This creates the weird situation that even though 1 api is used, the fractured underlying apis are painfully obvious. 

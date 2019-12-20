@@ -1,7 +1,17 @@
 # python_deutschepost
 This is a python access to the DeutschePost PaketPlus API. Specifically the (extended) Internetmarken products.
 
-## What is this API for?
+
+
+## What is this API wrapper for?
+
+This wrapper makes it possible to create shipping labels "Warenpost International" of this form:
+
+![example.png](example.png)
+
+
+
+## DeutschePost Structure
 
 DeutschePost has (at least) 2 apis:
 

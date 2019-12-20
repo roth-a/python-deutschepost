@@ -245,6 +245,18 @@ class PaketPlus:
 	
 
 	def retrieve_label(self, item_id, filename=None, return_pdf=True):
+		"""
+		Possible return values (defined in headers['Accept']) are:		
+			“image/png” (A6)		
+			“image/png+6x4” (6x4 inch)
+			“application/pdf” (A6)
+			“application/pdf+singlepage” (A6)
+			“application/pdf+singlepage+6x4” (6x4 inch)
+			“application/zpl” (A6)
+			“application/zpl+rotated” (rotated by 90 degrees for label printers)
+			“application/zpl+6x4” (6x4 inch)
+			“application/zpl+rotated+6x4”  (6x4 inch and rotated by 90 degrees for label printers)
+		"""
 		
 		headers = self.gen_full_headers()
 		headers['Accept'] = 'application/pdf' if return_pdf else 'image/png'

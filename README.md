@@ -17,6 +17,9 @@ DeutschePost has (at least) 2 APIs:
    * **Some Internetmarke products are "extended" through this API**. For example is the "Warenpost International" (with a customs form) only available with this API.  The Internetmarke API  only offers  "Warenpost International" (**without** a customs form), and it is not clear if this is valid.
    * This module offers these "extended" Internetmarke products available in python.
 
+## Registration
+For both APIs registration is only possible through email addresses: api@deutschepost.de  and pcf-1click@deutschepost.de
+
 ## Problems
 
 Because the Internetmarke SOAP API is wrapped by a REST API, some responses are soap responses (xml), and some are rest responses (json).
@@ -24,3 +27,4 @@ Because the Internetmarke SOAP API is wrapped by a REST API, some responses are 
 Only a few of the api calls from https://api-qa.deutschepost.com/dpi-apidoc  are forwarded to the Internetmarke API.
 
 This creates the weird situation that even though 1 api is used, the fractured underlying apis and systems are painfully obvious. 
+

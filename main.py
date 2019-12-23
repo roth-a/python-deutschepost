@@ -145,15 +145,9 @@ class PaketPlus:
 		return token
 		
 		
-		
-	
-	def create_order(self, product, shipment):
-		"""
-
-		Parameters
-		----------
-		product : int or str
-				PPL-ID		Produkt													 Preis in Cent\n
+	def list_available_products(self):
+		products = """
+		PPL-ID		Produkt													 Preis in Cent\n
 				 \n
 				10246  Warenpost International		XS	Non-EU		  Untracked	   320\n
 				10247  Warenpost International		S	 Non-EU		  Untracked	   370\n
@@ -185,7 +179,18 @@ class PaketPlus:
 				10287  Warenpost International		L	 EU			  Unterschrift   2321\n
 				10292  Warenpost International		KT	EU			  Unterschrift	350\n
 				10293  Warenpost International		KT	Non-EU		  Unterschrift	350\n
-				 				 
+
+				""".replace('				', '')
+		return products
+		
+	
+	def create_order(self, product_code, shipment):
+		"""
+
+		Parameters
+		----------
+		product_code : int or str
+			See self.list_available_products() for product codes
 		shipment: interface.Shipment type
 			DESCRIPTION.
 
@@ -210,7 +215,7 @@ class PaketPlus:
 		  },
 		  "items": [
 			{
-			  "product": str(product),
+			  "product": str(product_code),
 			  "serviceLevel": "STANDARD",
 			  "recipient": recipient['address']['name'],
 			  "recipientPhone": recipient['phone'],
@@ -255,6 +260,8 @@ class PaketPlus:
 					 data=json.dumps(values), headers=self.gen_full_headers())
 		
 		logger.debug('create_order response: ' + pp.pformat(response))
+		if not 'shipments' in response:
+			raise Exception('No label was created. ' +' response: ' + pp.pformat(response))
 		item_ids = [item['id'] for item in response['shipments'][0]['items']]
 		logger.info('create_order item_ids: ' + pp.pformat(item_ids))
 		return item_ids 

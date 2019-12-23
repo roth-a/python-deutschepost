@@ -10,7 +10,7 @@ logger.info('Loaded '+ __file__)
 logger.setLevel(logging.DEBUG)
 
 # these line only for debug
-fh = logging.FileHandler('.integration.log')
+fh = logging.FileHandler(__file__ + '.log')
 fh.setLevel(logging.DEBUG)
 logger.addHandler(fh)
 
@@ -30,17 +30,35 @@ class PaketPlus:
 		self.test = test
 		self.wallet_balance = None
 		self.token = None
+		if self.test:
+			self.base_url = 'https://api-qa.deutschepost.com/'
+		else:
+			self.base_url = 'https://api.deutschepost.com/'
+
+		
 		self.token = self.get_user_token()
+		
 		logger.debug('initialized PaketPlus as test=' + str(test) )
 	
-	def api_call(self, URL, method='get', oauth=None,
+	def __str__(self):
+		return str({
+			'config':self.config,
+			'test':self.test,
+			'wallet_balance':self.wallet_balance,
+			'token':self.token,
+			'base_url':self.base_url})
+	
+	def api_call(self, url, method='get', oauth=None,
 				 params=None, files=None, data=None, headers = None, 
 				 response_is_json = True, return_full=False):
 		# see examples here https://www.programcreek.com/python/example/2253/requests.put   or  https://stackoverflow.com/questions/44855616/how-to-add-a-new-item-using-python-etsy-http-api-methods  
-		response = requests.request(method, URL,  data=data, params=params, 
+		full_url = self.base_url + url
+		
+		response = requests.request(method, full_url,  data=data, params=params, 
 								  files=files, headers=headers)   
+		
 		if response.status_code != requests.codes.ok:
-			logger.debug(str(s) for s in (method, URL, data, params, files))
+			logger.debug(str(s) for s in (method, full_url, data, params, files))
 		try:
 			if return_full:
 				return response
@@ -108,8 +126,7 @@ class PaketPlus:
 			DESCRIPTION.
 		"""
 		
-		
-		response = self.api_call('https://api-qa.deutschepost.com/v1/auth/accesstoken', 
+		response = self.api_call('v1/auth/accesstoken', 
 							method='get', headers=self.gen_full_headers(), response_is_json = False)
 		
 		logger.debug('get_user_token response: ' + pp.pformat(response))
@@ -232,9 +249,8 @@ class PaketPlus:
 		  ]
 		}
 		
-			
 		# create order
-		response = self.api_call('https://api-qa.deutschepost.com/dpi/shipping/v1/orders', 
+		response = self.api_call('dpi/shipping/v1/orders', 
 					method='post', 
 					 data=json.dumps(values), headers=self.gen_full_headers())
 		
@@ -262,7 +278,7 @@ class PaketPlus:
 		headers['Accept'] = 'application/pdf' if return_pdf else 'image/png'
 			
 		# create order
-		response = self.api_call('https://api-qa.deutschepost.com/dpi/shipping/v1/items/'+str(item_id)+'/label', 
+		response = self.api_call('dpi/shipping/v1/items/'+str(item_id)+'/label', 
 					method='get', 
 					headers=headers, return_full=True)
 		logger.debug('retrieve_label response: ' + pp.pformat(response))

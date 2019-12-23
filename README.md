@@ -1,6 +1,4 @@
 # python_deutschepost
-Warning: so far only the test system works, but not with the production data. 
-
 This wrapper makes it possible to create shipping labels "Warenpost International" of this form:
 
 ![example.png](example.png)

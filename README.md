@@ -21,38 +21,39 @@ DeutschePost has (at least) 2 APIs:
 
 The following products are available through this extended Internetmarke API:
 
-| Code  | Product                    | Region  | Tracking     | Price (Cents) |
-|-------|----------------------------|---------|--------------|------| 
-| 10246 | Warenpost International XS | Non-EU  | Untracked    | 320  | 
-| 10247 | Warenpost International S  |  Non-EU | Untracked    | 370  | 
-| 10248 | Warenpost International M  |  Non-EU | Untracked    | 700  | 
-| 10249 | Warenpost International L  |  Non-EU | Untracked    | 1700 | 
-| 10250 | Warenpost International XS | Non-EU  | Tracked      | 545  | 
-| 10251 | Warenpost International S  |  Non-EU | Tracked      | 595  | 
-| 10252 | Warenpost International M  |  Non-EU | Tracked      | 925  | 
-| 10253 | Warenpost International L  |  Non-EU | Tracked      | 1925 | 
-| 10254 | Warenpost International XS | EU      | Untracked    | 381  | 
-| 10255 | Warenpost International S  |  EU     | Untracked    | 440  | 
-| 10256 | Warenpost International M  |  EU     | Untracked    | 833  | 
-| 10257 | Warenpost International L  |  EU     | Untracked    | 2023 | 
-| 10258 | Warenpost International XS | EU      | Tracked      | 649  | 
-| 10259 | Warenpost International S  |  EU     | Tracked      | 708  | 
-| 10260 | Warenpost International M  |  EU     | Tracked      | 1101 | 
-| 10261 | Warenpost International L  |  EU     | Tracked      | 2291 | 
-| 10272 | Warenpost International KT | Non-EU  | Untracked    | 100  | 
-| 10273 | Warenpost International KT | Non-EU  | Tracked      | 325  | 
-| 10270 | Warenpost International KT | EU      | Untracked    | 100  | 
-| 10271 | Warenpost International KT | EU      | Tracked      | 325  | 
-| 10280 | Warenpost International XS | Non-EU  | Unterschrift | 570  | 
-| 10281 | Warenpost International S  |  Non-EU | Unterschrift | 620  | 
-| 10282 | Warenpost International M  |  Non-EU | Unterschrift | 950  | 
-| 10283 | Warenpost International L  |  Non-EU | Unterschrift | 1950 | 
-| 10284 | Warenpost International XS | EU      | Unterschrift | 678  | 
-| 10285 | Warenpost International S  |  EU     | Unterschrift | 738  | 
-| 10286 | Warenpost International M  |  EU     | Unterschrift | 1131 | 
-| 10287 | Warenpost International L  |  EU     | Unterschrift | 2321 | 
-| 10292 | Warenpost International KT | EU      | Unterschrift | 350  | 
-| 10293 | Warenpost International KT | Non-EU  | Unterschrift | 350  | 
+| Code  | Product                    | Region  | Region    | Signature    | Price (cents) | 
+|-------|----------------------------|---------|-----------|--------------|---------------| 
+| 10246 | Warenpost International XS | Non-EU  | Untracked |              | 320           | 
+| 10247 | Warenpost International S  |  Non-EU | Untracked |              | 370           | 
+| 10248 | Warenpost International M  |  Non-EU | Untracked |              | 700           | 
+| 10249 | Warenpost International L  |  Non-EU | Untracked |              | 1700          | 
+| 10250 | Warenpost International XS | Non-EU  | Tracked   |              | 545           | 
+| 10251 | Warenpost International S  |  Non-EU | Tracked   |              | 595           | 
+| 10252 | Warenpost International M  |  Non-EU | Tracked   |              | 925           | 
+| 10253 | Warenpost International L  |  Non-EU | Tracked   |              | 1925          | 
+| 10254 | Warenpost International XS | EU      | Untracked |              | 381           | 
+| 10255 | Warenpost International S  |  EU     | Untracked |              | 440           | 
+| 10256 | Warenpost International M  |  EU     | Untracked |              | 833           | 
+| 10257 | Warenpost International L  |  EU     | Untracked |              | 2023          | 
+| 10258 | Warenpost International XS | EU      | Tracked   |              | 649           | 
+| 10259 | Warenpost International S  |  EU     | Tracked   |              | 708           | 
+| 10260 | Warenpost International M  |  EU     | Tracked   |              | 1101          | 
+| 10261 | Warenpost International L  |  EU     | Tracked   |              | 2291          | 
+| 10272 | Warenpost International KT | Non-EU  | Untracked |              | 100           | 
+| 10273 | Warenpost International KT | Non-EU  | Tracked   |              | 325           | 
+| 10270 | Warenpost International KT | EU      | Untracked |              | 100           | 
+| 10271 | Warenpost International KT | EU      | Tracked   |              | 325           | 
+| 10280 | Warenpost International XS | Non-EU  |           | Unterschrift | 570           | 
+| 10281 | Warenpost International S  |  Non-EU |           | Unterschrift | 620           | 
+| 10282 | Warenpost International M  |  Non-EU |           | Unterschrift | 950           | 
+| 10283 | Warenpost International L  |  Non-EU |           | Unterschrift | 1950          | 
+| 10284 | Warenpost International XS | EU      |           | Unterschrift | 678           | 
+| 10285 | Warenpost International S  |  EU     |           | Unterschrift | 738           | 
+| 10286 | Warenpost International M  |  EU     |           | Unterschrift | 1131          | 
+| 10287 | Warenpost International L  |  EU     |           | Unterschrift | 2321          | 
+| 10292 | Warenpost International KT | EU      |           | Unterschrift | 350           | 
+| 10293 | Warenpost International KT | Non-EU  |           | Unterschrift | 350           | 
+
 
 
 

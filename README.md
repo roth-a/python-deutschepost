@@ -21,7 +21,7 @@ DeutschePost has (at least) 2 APIs:
 
 The following products are available through this extended Internetmarke API:
 
-| Code  | Product                    | Region  | Region    | Signature    | Price (cents) |
+| Code  | Product                    | Region  | Tracking  | Signature    | Price (cents) |
 |-------|----------------------------|---------|-----------|--------------|---------------|
 | 10246 | Warenpost International XS | Non-EU  | Untracked |              | 320           |
 | 10247 | Warenpost International S  |  Non-EU | Untracked |              | 370           |

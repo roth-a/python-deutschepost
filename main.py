@@ -7,12 +7,11 @@ pp = pprint.PrettyPrinter()
 
 logger = logging.getLogger(str(os.getpid()) +'."'+__file__+'"')
 logger.info('Loaded '+ __file__)
-logger.setLevel(logging.DEBUG)
 
 # these line only for debug
-fh = logging.FileHandler(__file__ + '.log')
-fh.setLevel(logging.DEBUG)
-logger.addHandler(fh)
+# fh = logging.FileHandler(__file__ + '.log')
+# fh.setLevel(logging.DEBUG)
+# logger.addHandler(fh)
 
 
 
@@ -199,54 +198,62 @@ class PaketPlus:
 		item_ids : TYPE
 			List of label/item ids
 		"""
-		
+		def _2str(*args, sep=' '):
+			cleaned_args = [str(arg) for arg in args if not arg is None]
+			return sep.join(cleaned_args)
 		
 		sender = shipment['sender_info']
 		recipient = shipment['recipient_info']
 		
 		
+		total_amount = sum([item_stack['number'] for item_stack in shipment['item_stacks']])
+		total_weight = sum([item_stack['number'] * item_stack['item']['weight'] if (not item_stack['item']['weight'] is None) else 100
+							   for item_stack in shipment['item_stacks']])
+		
 		values = {
-		  "customerEkp": self.config['portokasse']['ekp'],
+		  "customerEkp": _2str(self.config['portokasse']['ekp']),
 		  "orderStatus": "FINALIZE",  
 		  "paperwork": {
-			 "contactName": sender['address']['name'],
+			 "contactName": _2str(sender['address']['name']),
 			 "pickupType": "CUSTOMER_DROP_OFF",
 			 "awbCopyCount": 1
 		  },
 		  "items": [
 			{
-			  "product": str(product_code),
+			  "product": _2str(product_code),
 			  "serviceLevel": "STANDARD",
-			  "recipient": recipient['address']['name'],
-			  "recipientPhone": recipient['phone'],
-			  "recipientFax": "",
-			  "recipientEmail": recipient['email'],
-			  "addressLine1": " ".join([recipient['address']['street'], recipient['address']['house_number']]) ,
-			  "addressLine2": recipient['address']['street2'],
-			  "addressLine3": recipient['address']['street3'],
-			  "city": recipient['address']['city'],
-			  "state": "",
-			  "postalCode": str(recipient['address']['post_code']),
-			  "destinationCountry": recipient['address']['country_code'],
-			  "shipmentAmount": 0,
+			  "recipient": _2str(recipient['address']['name']),
+			  "recipientPhone": _2str(recipient['phone']),
+			  "recipientFax": _2str(recipient['fax']),
+			  "recipientEmail": _2str(recipient['email']),
+			  "addressLine1": _2str(recipient['address']['street'], 
+							   recipient['address']['house_number']),
+			  "addressLine2": _2str(recipient['address']['street2']),
+			  "addressLine3": _2str(recipient['address']['street3']),
+			  "city": _2str(recipient['address']['city']),
+			  "state": _2str(recipient['address']['state']),
+			  "postalCode": _2str(recipient['address']['post_code']),
+			  "destinationCountry": _2str(recipient['address']['country_code']),
+			  "shipmentAmount": total_amount,
 			  "shipmentCurrency": "EUR",
-			  "shipmentGrossWeight": 100,
-			  "senderName": sender['address']['name'],
-			  "senderAddressLine1": " ".join([sender['address']['street'], sender['address']['house_number']]) ,
-			  "senderAddressLine2": sender['address']['street2'],
-			  "senderCountry": sender['address']['country_code'],
-			  "senderCity": sender['address']['city'],
-			  "senderPostalCode": str(sender['address']['post_code']),
-			  "senderPhone": sender['phone'],
-			  "senderEmail": sender['email'],
+			  "shipmentGrossWeight": total_weight,
+			  "senderName": _2str(sender['address']['name']),
+			  "senderAddressLine1": _2str(sender['address']['street'], 
+									 sender['address']['house_number']) ,
+			  "senderAddressLine2": _2str(sender['address']['street2']),
+			  "senderCountry": _2str(sender['address']['country_code']),
+			  "senderCity": _2str(sender['address']['city']),
+			  "senderPostalCode": _2str(sender['address']['post_code']),
+			  "senderPhone": _2str(sender['phone']),
+			  "senderEmail": _2str(sender['email']),
 			  "shipmentNaturetype": "SALE_GOODS",			  			  
 			  "contents": [
 				{
-				  "contentPieceDescription": item_stack['item']['description_short'],
+				  "contentPieceDescription": _2str(item_stack['item']['description_short']),
 				  "contentPieceNetweight": 
 					  item_stack['number'] * item_stack['item']['weight'] if (not item_stack['item']['weight'] is None) else 100,
-				  "contentPieceOrigin": sender['address']['country_code'],
-				  "contentPieceAmount": item_stack['number'],
+				  "contentPieceOrigin": _2str(sender['address']['country_code']),
+				  "contentPieceAmount": _2str(item_stack['number']),
 				  "contentPieceValue": item_stack['number'] * item_stack['item']['price']
 				}
 			  for item_stack in shipment['item_stacks']]
@@ -261,6 +268,7 @@ class PaketPlus:
 		
 		logger.debug('create_order response: ' + pp.pformat(response))
 		if not 'shipments' in response:
+			logger.debug('values = ' + str(values))
 			raise Exception('No label was created. ' +' response: ' + pp.pformat(response))
 		item_ids = [item['id'] for item in response['shipments'][0]['items']]
 		logger.info('create_order item_ids: ' + pp.pformat(item_ids))
@@ -325,3 +333,10 @@ class PaketPlus:
 		writer_output.write(output_file, reader_input)	
 		
 		return output_file
+
+
+##
+
+
+
+

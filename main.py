@@ -197,6 +197,7 @@ class PaketPlus:
 		-------
 		item_ids : TYPE
 			List of label/item ids
+		response: response object
 		"""
 		def _2str(*args, sep=' '):
 			cleaned_args = [str(arg) for arg in args if not arg is None]
@@ -268,11 +269,13 @@ class PaketPlus:
 		
 		logger.debug('create_order response: ' + pp.pformat(response))
 		if not 'shipments' in response:
+			logger.warning('No label was created. ' +' response: ' + pp.pformat(response))
 			logger.debug('values = ' + str(values))
-			raise Exception('No label was created. ' +' response: ' + pp.pformat(response))
+			return None, response
+# 			raise Exception('No label was created. ' +' response: ' + pp.pformat(response))
 		item_ids = [item['id'] for item in response['shipments'][0]['items']]
 		logger.info('create_order item_ids: ' + pp.pformat(item_ids))
-		return item_ids 
+		return item_ids, response
 	
 
 	def retrieve_label(self, item_id, filename=None, return_pdf=True):

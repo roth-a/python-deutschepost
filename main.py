@@ -332,6 +332,7 @@ class PaketPlus:
 		# write the modified content to disk
 		writer_output.write(output_file, reader_input)	
 		
+		logger.debug('signed file: '+ input_file + ' --> ' + output_file)
 		return output_file
 
 

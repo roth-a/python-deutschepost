@@ -208,8 +208,8 @@ class PaketPlus:
 		
 		
 		total_amount = sum([item_stack['number'] for item_stack in shipment['item_stacks']])
-		total_weight = sum([item_stack['number'] * item_stack['item']['weight'] if (not item_stack['item']['weight'] is None) else 100
-							   for item_stack in shipment['item_stacks']])
+		total_weight = max(1, sum([item_stack['number'] * item_stack['item']['weight'] if (not item_stack['item']['weight'] is None) else 100
+							   for item_stack in shipment['item_stacks']]))
 		
 		values = {
 		  "customerEkp": _2str(self.config['portokasse']['ekp']),

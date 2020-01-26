@@ -255,7 +255,7 @@ class PaketPlus:
 					  item_stack['number'] * item_stack['item']['weight'] if (not item_stack['item']['weight'] is None) else 100,
 				  "contentPieceOrigin": _2str(sender['address']['country_code']),
 				  "contentPieceAmount": _2str(item_stack['number']),
-				  "contentPieceValue": item_stack['number'] * item_stack['item']['price']
+				  "contentPieceValue": round(item_stack['number'] * item_stack['item']['price'],2)
 				}
 			  for item_stack in shipment['item_stacks']]
 			}

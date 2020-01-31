@@ -1,17 +1,19 @@
 # https://github.com/reddit-archive/reddit/wiki/OAuth2-Python-Example
-import json, logging, requests, os, base64, datetime
+import json, requests, os, base64, datetime, sys
 import hashlib
 import pprint
 pp = pprint.PrettyPrinter()
 
 
+import logging
 logger = logging.getLogger(str(os.getpid()) +'."'+__file__+'"')
+# check if there are parents handlers. If not then add console output
+if len(logging.getLogger(str(os.getpid())).handlers) == 0:	
+	logger.setLevel(logging.DEBUG)	
+	fh = logging.StreamHandler(sys.stdout)
+	fh.setLevel(logging.DEBUG)
+	logger.addHandler(fh)
 logger.info('Loaded '+ __file__)
-
-# these line only for debug
-# fh = logging.FileHandler(__file__ + '.log')
-# fh.setLevel(logging.DEBUG)
-# logger.addHandler(fh)
 
 
 

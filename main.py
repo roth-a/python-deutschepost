@@ -8,12 +8,12 @@ pp = pprint.PrettyPrinter()
 import logging
 logger = logging.getLogger(str(os.getpid()) +'."'+__file__+'"')
 # check if there are parents handlers. If not then add console output
-if len(logging.getLogger(str(os.getpid())).handlers) == 0:	
-	logger.setLevel(logging.DEBUG)	
+if len(logging.getLogger(str(os.getpid())).handlers) == 0:
+	logger.setLevel(logging.DEBUG)
 	fh = logging.StreamHandler(sys.stdout)
 	fh.setLevel(logging.DEBUG)
 	logger.addHandler(fh)
-logger.info('Loaded '+ __file__)
+logger.debug('Loaded '+ __file__)
 
 
 
@@ -27,6 +27,7 @@ from pdfrw import PdfReader, PdfWriter, PageMerge
 
 class PaketPlus:
 	def __init__(self, config, test=True):
+		self.eu_countries_without_customs_form = {'HU', 'AT', 'FR', 'SE', 'DK', 'ES', 'LT', 'IT', 'LV', 'MT', 'GB', 'SK', 'EE', 'FI', 'IE', 'SI', 'CH', 'PT', 'GR', 'BE', 'DE', 'PL', 'LU', 'NL', 'BG', 'CY', 'RO'}
 		self.config = config['test_paketplus'] if test else config['production_paketplus']
 		self.test = test
 		self.wallet_balance = None
@@ -36,11 +37,12 @@ class PaketPlus:
 		else:
 			self.base_url = 'https://api.deutschepost.com/'
 
-		
+
 		self.token = self.get_user_token()
-		
+
+
 		logger.debug('initialized PaketPlus as test=' + str(test) )
-	
+
 	def __str__(self):
 		return str({
 			'config':self.config,
@@ -48,16 +50,16 @@ class PaketPlus:
 			'wallet_balance':self.wallet_balance,
 			'token':self.token,
 			'base_url':self.base_url})
-	
+
 	def api_call(self, url, method='get', oauth=None,
-				 params=None, files=None, data=None, headers = None, 
+				 params=None, files=None, data=None, headers = None,
 				 response_is_json = True, return_full=False):
-		# see examples here https://www.programcreek.com/python/example/2253/requests.put   or  https://stackoverflow.com/questions/44855616/how-to-add-a-new-item-using-python-etsy-http-api-methods  
+		# see examples here https://www.programcreek.com/python/example/2253/requests.put   or  https://stackoverflow.com/questions/44855616/how-to-add-a-new-item-using-python-etsy-http-api-methods
 		full_url = self.base_url + url
-		
-		response = requests.request(method, full_url,  data=data, params=params, 
-								  files=files, headers=headers)   
-		
+
+		response = requests.request(method, full_url,  data=data, params=params,
+								  files=files, headers=headers)
+
 		if response.status_code != requests.codes.ok:
 			logger.debug(str(s) for s in (method, full_url, data, params, files))
 		try:
@@ -68,8 +70,8 @@ class PaketPlus:
 		except (TypeError, ValueError):
 			logger.exception('json.loads(response.text) raised error')
 			return response.text
-	
-		
+
+
 	def gen_full_headers(self):
 		def compute_1c4a_hash(partner_id, req_ts, key_phase, key):
 			# trim leading and trailing spaces of each argument
@@ -89,8 +91,8 @@ class PaketPlus:
 			de_zone = timezone("Europe/Berlin")
 			de_time = datetime.datetime.now(de_zone)
 			return de_time.strftime("%d%m%Y-%H%M%S")
-		
-		
+
+
 		if self.token is None:
 			authorization_str = ":".join([self.config['portokasse']['user'], self.config['portokasse']['password']])
 			authorization = base64.b64encode(authorization_str.encode()).decode()
@@ -98,7 +100,7 @@ class PaketPlus:
 			logger.debug('get_user_token authorization_str= ' + pp.pformat(authorization_str))
 		else:
 			full_authorization_str = 'Bearer '+ self.token
-		
+
 		timestamp = self.config['1C4A']['request_timestamp'] if self.test else gen_timestamp()
 		headers = {
 			'Content-Type': 'application/json',
@@ -107,32 +109,32 @@ class PaketPlus:
 			'KEY_PHASE': '1',
 			'PARTNER_ID': self.config['1C4A']['partner_id'],
 			'REQUEST_TIMESTAMP': timestamp,
-			'PARTNER_SIGNATURE': (self.config['1C4A']['partner_signature'] if self.test else 
-									 compute_1c4a_hash(self.config['1C4A']['partner_id'], 
-										  timestamp, 
-										  self.config['1C4A']['key_phase'], 
+			'PARTNER_SIGNATURE': (self.config['1C4A']['partner_signature'] if self.test else
+									 compute_1c4a_hash(self.config['1C4A']['partner_id'],
+										  timestamp,
+										  self.config['1C4A']['key_phase'],
 										  self.config['1C4A']['key'])),
 		}
 		logger.debug('get_user_token header= ' + pp.pformat(headers))
 		return headers
-	
-	
+
+
 	def get_user_token(self):
 		"""
-		https://api-qa.deutschepost.com/dpi-apidoc/#/reference/authentication/access-token/get-access-token	
-	
+		https://api-qa.deutschepost.com/dpi-apidoc/#/reference/authentication/access-token/get-access-token
+
 		Returns
 		-------
 		TYPE
 			DESCRIPTION.
 		"""
-		
-		response = self.api_call('v1/auth/accesstoken', 
+
+		response = self.api_call('v1/auth/accesstoken',
 							method='get', headers=self.gen_full_headers(), response_is_json = False)
-		
+
 		logger.debug('get_user_token response: ' + pp.pformat(response))
 		xml = ET.fromstring(response)
-		
+
 		token = None
 		for child in xml:
 			for child2 in child:
@@ -141,11 +143,11 @@ class PaketPlus:
 						token = child3.text
 					if "walletBalance" in child3.tag:
 						self.wallet_balance = float(child3.text)/100
-		
-		logger.info('get_user_token token: ' + str(token))
+
+		logger.debug('get_user_token token: ' + str(token))
 		return token
-		
-		
+
+
 	def list_available_products(self):
 		products = """
 		PPL-ID		Produkt													 Preis in Cent\n
@@ -183,8 +185,8 @@ class PaketPlus:
 
 				""".replace('				', '')
 		return products
-		
-	
+
+
 	def create_order(self, product_code, shipment):
 		"""
 
@@ -204,18 +206,18 @@ class PaketPlus:
 		def _2str(*args, sep=' '):
 			cleaned_args = [str(arg) for arg in args if not arg is None]
 			return sep.join(cleaned_args)
-		
+
 		sender = shipment['sender_info']
 		recipient = shipment['recipient_info']
-		
-		
+
+
 		total_amount = sum([item_stack['number'] for item_stack in shipment['item_stacks']])
 		total_weight = max(1, sum([item_stack['number'] * item_stack['item']['weight'] if (not item_stack['item']['weight'] is None) else 100
 							   for item_stack in shipment['item_stacks']]))
-		
+
 		values = {
 		  "customerEkp": _2str(self.config['portokasse']['ekp']),
-		  "orderStatus": "FINALIZE",  
+		  "orderStatus": "FINALIZE",
 		  "paperwork": {
 			 "contactName": _2str(sender['address']['name']),
 			 "pickupType": "CUSTOMER_DROP_OFF",
@@ -229,7 +231,7 @@ class PaketPlus:
 			  "recipientPhone": _2str(recipient['phone']),
 			  "recipientFax": _2str(recipient['fax']),
 			  "recipientEmail": _2str(recipient['email']),
-			  "addressLine1": _2str(recipient['address']['street'], 
+			  "addressLine1": _2str(recipient['address']['street'],
 							   recipient['address']['house_number']),
 			  "addressLine2": _2str(recipient['address']['street2']),
 			  "addressLine3": _2str(recipient['address']['street3']),
@@ -241,7 +243,7 @@ class PaketPlus:
 			  "shipmentCurrency": "EUR",
 			  "shipmentGrossWeight": total_weight,
 			  "senderName": _2str(sender['address']['name']),
-			  "senderAddressLine1": _2str(sender['address']['street'], 
+			  "senderAddressLine1": _2str(sender['address']['street'],
 									 sender['address']['house_number']) ,
 			  "senderAddressLine2": _2str(sender['address']['street2']),
 			  "senderCountry": _2str(sender['address']['country_code']),
@@ -249,11 +251,11 @@ class PaketPlus:
 			  "senderPostalCode": _2str(sender['address']['post_code']),
 			  "senderPhone": _2str(sender['phone']),
 			  "senderEmail": _2str(sender['email']),
-			  "shipmentNaturetype": "SALE_GOODS",			  			  
+			  "shipmentNaturetype": "SALE_GOODS",
 			  "contents": [
 				{
 				  "contentPieceDescription": _2str(item_stack['item']['description_short']),
-				  "contentPieceNetweight": 
+				  "contentPieceNetweight":
 					  item_stack['number'] * item_stack['item']['weight'] if (not item_stack['item']['weight'] is None) else 100,
 				  "contentPieceOrigin": _2str(sender['address']['country_code']),
 				  "contentPieceAmount": _2str(item_stack['number']),
@@ -263,12 +265,12 @@ class PaketPlus:
 			}
 		  ]
 		}
-		
+
 		# create order
-		response = self.api_call('dpi/shipping/v1/orders', 
-					method='post', 
+		response = self.api_call('dpi/shipping/v1/orders',
+					method='post',
 					 data=json.dumps(values), headers=self.gen_full_headers())
-		
+
 		logger.debug('create_order response: ' + pp.pformat(response))
 		if not 'shipments' in response:
 			logger.warning('No label was created. ' +' response: ' + pp.pformat(response))
@@ -278,12 +280,12 @@ class PaketPlus:
 		item_ids = [item['id'] for item in response['shipments'][0]['items']]
 		logger.info('create_order item_ids: ' + pp.pformat(item_ids))
 		return item_ids, response
-	
+
 
 	def retrieve_label(self, item_id, filename=None, return_pdf=True):
 		"""
-		Possible return values (defined in headers['Accept']) are:		
-			“image/png” (A6)		
+		Possible return values (defined in headers['Accept']) are:
+			“image/png” (A6)
 			“image/png+6x4” (6x4 inch)
 			“application/pdf” (A6)
 			“application/pdf+singlepage” (A6)
@@ -293,19 +295,19 @@ class PaketPlus:
 			“application/zpl+6x4” (6x4 inch)
 			“application/zpl+rotated+6x4”  (6x4 inch and rotated by 90 degrees for label printers)
 		"""
-		
+
 		headers = self.gen_full_headers()
 		headers['Accept'] = 'application/pdf' if return_pdf else 'image/png'
-			
+
 		# create order
-		response = self.api_call('dpi/shipping/v1/items/'+str(item_id)+'/label', 
-					method='get', 
+		response = self.api_call('dpi/shipping/v1/items/'+str(item_id)+'/label',
+					method='get',
 					headers=headers, return_full=True)
 		logger.debug('retrieve_label response: ' + pp.pformat(response))
-		
+
 		file_ending = '.pdf' if return_pdf else '.png'
 		if filename is None:
-			filename  = (datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_' 
+			filename  = (datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_'
 						+ str(item_id) + file_ending)
 		with open(filename , 'wb') as f:
 			f.write(response.content)
@@ -320,23 +322,23 @@ class PaketPlus:
 		-------
 		output filename
 		"""
-		
+
 		output_file = input_file[:-4] + '_signed.pdf'
-		
+
 		# define the reader and writer objects
 		reader_input = PdfReader(input_file)
 		writer_output = PdfWriter()
 		watermark_input = PdfReader(signature_filename)
 		watermark = watermark_input.pages[0]
-		
+
 		# go through the pages one after the next
 		for current_page in range(len(reader_input.pages)):
 			merger = PageMerge(reader_input.pages[current_page])
 			merger.add(watermark).render()
-		
+
 		# write the modified content to disk
-		writer_output.write(output_file, reader_input)	
-		
+		writer_output.write(output_file, reader_input)
+
 		logger.debug('signed file: '+ input_file + ' --> ' + output_file)
 		return output_file
 

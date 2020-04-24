@@ -207,8 +207,8 @@ class PaketPlus:
 			cleaned_args = [str(arg) for arg in args if not arg is None]
 			return sep.join(cleaned_args)
 
-		sender = shipment['sender_info']
-		recipient = shipment['recipient_info']
+		sender = shipment['sender']
+		recipient = shipment['recipient']
 
 
 		total_amount = sum([item_stack['number'] for item_stack in shipment['item_stacks']])
@@ -259,12 +259,13 @@ class PaketPlus:
 					  item_stack['number'] * item_stack['item']['weight'] if (not item_stack['item']['weight'] is None) else 100,
 				  "contentPieceOrigin": _2str(sender['address']['country_code']),
 				  "contentPieceAmount": _2str(item_stack['number']),
-				  "contentPieceValue": round(item_stack['number'] * item_stack['item']['price'],2)
+				  "contentPieceValue": "{0:.2f}".format(round(item_stack['number'] * item_stack['item']['price'],2))
 				}
 			  for item_stack in shipment['item_stacks']]
 			}
 		  ]
 		}
+		logger.debug('create_order values: ' + pp.pformat(values))
 
 		# create order
 		response = self.api_call('dpi/shipping/v1/orders',

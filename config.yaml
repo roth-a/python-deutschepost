@@ -1,0 +1,24 @@
+
+
+paketplus_production:
+    1C4A:
+        partner_id: 'xxxxx'
+        key: "xxxx"
+        key_phase: "1"
+    portokasse:
+        user: "xxxxx"
+        password: "xxxx"
+        ekp: "xxxx"
+        
+        
+paketplus_sandbox:
+    1C4A:
+        partner_id: 'xxxx'
+        partner_signature: 'xxxx'
+        request_timestamp: 'xxxx'
+        key_phase: "1"
+    portokasse:
+        user: "xxxxx"
+        password: "xxxx"
+        ekp: "xxxxx"
+        

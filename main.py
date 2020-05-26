@@ -27,7 +27,7 @@ from pdfrw import PdfReader, PdfWriter, PageMerge
 
 class PaketPlus:
 	def __init__(self, config, is_sandbox=True):
-		self.eu_countries_without_customs_form = {'HU', 'AT', 'FR', 'SE', 'DK', 'ES', 'LT', 'IT', 'LV', 'MT', 'GB', 'SK', 'EE', 'FI', 'IE', 'SI', 'CH', 'PT', 'GR', 'BE', 'DE', 'PL', 'LU', 'NL', 'BG', 'CY', 'RO'}
+		self.eu_countries_without_customs_form = {'HU', 'AT', 'FR', 'SE', 'DK', 'ES', 'LT', 'IT', 'LV', 'MT', 'GB', 'SK', 'EE', 'FI', 'IE', 'SI',  'PT', 'GR', 'BE', 'DE', 'PL', 'LU', 'NL', 'BG', 'CY', 'RO'}
 		self.config = config['paketplus_sandbox'] if is_sandbox else config['paketplus_production']
 		self.is_sandbox = is_sandbox
 		self.wallet_balance = None
@@ -68,7 +68,7 @@ class PaketPlus:
 			else:
 				return json.loads(response.text) if response_is_json else response.text
 		except (TypeError, ValueError):
-			logger.exception('json.loads(response.text) raised error')
+			logger.critical('json.loads(response.text) raised error', exc_info=True)
 			return response.text
 
 

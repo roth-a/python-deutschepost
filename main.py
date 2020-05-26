@@ -26,13 +26,13 @@ from pdfrw import PdfReader, PdfWriter, PageMerge
 
 
 class PaketPlus:
-	def __init__(self, config, test=True):
+	def __init__(self, config, is_sandbox=True):
 		self.eu_countries_without_customs_form = {'HU', 'AT', 'FR', 'SE', 'DK', 'ES', 'LT', 'IT', 'LV', 'MT', 'GB', 'SK', 'EE', 'FI', 'IE', 'SI', 'CH', 'PT', 'GR', 'BE', 'DE', 'PL', 'LU', 'NL', 'BG', 'CY', 'RO'}
-		self.config = config['test_paketplus'] if test else config['production_paketplus']
-		self.test = test
+		self.config = config['paketplus_sandbox'] if is_sandbox else config['paketplus_production']
+		self.is_sandbox = is_sandbox
 		self.wallet_balance = None
 		self.token = None
-		if self.test:
+		if self.is_sandbox:
 			self.base_url = 'https://api-qa.deutschepost.com/'
 		else:
 			self.base_url = 'https://api.deutschepost.com/'
@@ -41,12 +41,12 @@ class PaketPlus:
 		self.token = self.get_user_token()
 
 
-		logger.debug('initialized PaketPlus as test=' + str(test) )
+		logger.debug('initialized PaketPlus as sandbox=' + str(is_sandbox) )
 
 	def __str__(self):
 		return str({
 			'config':self.config,
-			'test':self.test,
+			'test':self.is_sandbox,
 			'wallet_balance':self.wallet_balance,
 			'token':self.token,
 			'base_url':self.base_url})
@@ -101,7 +101,7 @@ class PaketPlus:
 		else:
 			full_authorization_str = 'Bearer '+ self.token
 
-		timestamp = self.config['1C4A']['request_timestamp'] if self.test else gen_timestamp()
+		timestamp = self.config['1C4A']['request_timestamp'] if self.is_sandbox else gen_timestamp()
 		headers = {
 			'Content-Type': 'application/json',
 			'Accept': '',
@@ -109,7 +109,7 @@ class PaketPlus:
 			'KEY_PHASE': '1',
 			'PARTNER_ID': self.config['1C4A']['partner_id'],
 			'REQUEST_TIMESTAMP': timestamp,
-			'PARTNER_SIGNATURE': (self.config['1C4A']['partner_signature'] if self.test else
+			'PARTNER_SIGNATURE': (self.config['1C4A']['partner_signature'] if self.is_sandbox else
 									 compute_1c4a_hash(self.config['1C4A']['partner_id'],
 										  timestamp,
 										  self.config['1C4A']['key_phase'],

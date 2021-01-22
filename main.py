@@ -27,7 +27,7 @@ from pdfrw import PdfReader, PdfWriter, PageMerge
 
 class PaketPlus:
 	def __init__(self, config, is_sandbox=True):
-		self.eu_countries_without_customs_form = {'HU', 'HR', 'AT', 'FR', 'SE', 'DK', 'ES', 'LT', 'IT', 'LV', 'MT', 'SK', 'EE', 'FI', 'IE', 'SI',  'PT', 'GR', 'BE', 'DE', 'PL', 'LU', 'NL', 'BG', 'CY', 'RO'}
+		self.eu_countries_without_customs_form = {'HU', 'HR', 'AT', 'FR', 'SE', 'DK', 'ES', 'LT', 'IT', 'LV', 'MT', 'SK', 'EE', 'FI', 'IE', 'SI',  'PT', 'GR', 'BE', 'DE', 'PL', 'LU', 'NL', 'BG', 'CY', 'CZ', 'RO'}
 		self.config = config['paketplus_sandbox'] if is_sandbox else config['paketplus_production']
 		self.is_sandbox = is_sandbox
 		self.wallet_balance = None

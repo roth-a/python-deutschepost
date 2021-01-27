@@ -4,7 +4,7 @@ import python_deutschepost
 import yaml
 
 #%%
-with open("deutschepost.yaml", "r") as file:
+with open("config.yaml", "r") as file:
 	config = list(yaml.load_all(file))[0]
 
 paket_plus = python_deutschepost.PaketPlus(config, test=True)
@@ -42,11 +42,12 @@ item_stacks[0]['item']['description_short'] = 'Flash light'
 item_stacks[0]['item']['price'] = 12.99
 
 shipment['item_stacks'] = item_stacks
-# pp.pprint(shipment)
+# pprint(shipment)
 item_ids = paket_plus.create_order(10251, shipment)
 #%%
 filenames = [paket_plus.retrieve_label(item_id) for item_id in item_ids]
 
-signed_fileneames = [paket_plus.add_signature_to_pdf(filename) for filename in filenames]
+signed_filenames = [paket_plus.add_signature_to_pdf(filename) for filename in filenames]
+print(signed_filenames)
 
 #%%

@@ -22,14 +22,14 @@ sender['address']['house_number'] = '10'
 sender['address']['street'] = 'Düsseldorfer Straße '
 sender['address']['post_code'] = '11001'
 sender['address']['city'] = 'Berlin'
-sender['address']['country_code'] = 'DE'
+sender['address']['country_code'] = 'DE'   # country codes can be found here: https://country-code.cl/
 
 recipient['address']['name'] = 'Homer Simpson'
 recipient['address']['house_number'] = '4'
 recipient['address']['street'] = 'Market Square.'
 recipient['address']['post_code'] = '53911'
 recipient['address']['city'] = 'Springfield'
-recipient['address']['country_code'] = 'US'
+recipient['address']['country_code'] = 'US'   # country codes can be found here: https://country-code.cl/
 
 shipment = python_deutschepost.interface.Shipment()
 shipment['sender_info'] = sender

@@ -1,4 +1,4 @@
-# copy this file  and deutschepost.yaml to ../
+# copy this file  and config.yaml to the parent folder '../'
 
 import python_deutschepost
 import yaml
